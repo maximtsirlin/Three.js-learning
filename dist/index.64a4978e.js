@@ -579,6 +579,7 @@ var _three = require("three");
 var _orbitControlsJs = require("three/examples/jsm/controls/OrbitControls.js");
 var _datGui = require("dat.gui");
 const renderer = new _three.WebGLRenderer();
+renderer.shadowMap.enabled = true;
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 const scene = new _three.Scene();
@@ -602,7 +603,8 @@ const planeMaterial = new _three.MeshStandardMaterial({
 const plane = new _three.Mesh(planeGeometry, planeMaterial);
 scene.add(plane);
 plane.rotation.x = -0.5 * Math.PI;
-const gridHelper = new _three.GridHelper(30, 100);
+plane.receiveShadow = true;
+const gridHelper = new _three.GridHelper(30, 10);
 scene.add(gridHelper);
 const sphereGeometry = new _three.SphereGeometry(4, 50, 10);
 const sphereMaterial = new _three.MeshStandardMaterial({
@@ -612,10 +614,23 @@ const sphereMaterial = new _three.MeshStandardMaterial({
 const sphere = new _three.Mesh(sphereGeometry, sphereMaterial);
 scene.add(sphere);
 sphere.position.set(0, 10, 0);
+sphere.castShadow = true;
 const ambientLight = new _three.AmbientLight(0x333333);
 scene.add(ambientLight);
-const directionalLight = new _three.DirectionalLight(0xFFFFFF, 0.8);
-scene.add(directionalLight);
+// const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 0.8);
+// scene.add(directionalLight);
+// directionalLight.position.set(-30, 50, 0);
+// directionalLight.castShadow = true;
+// directionalLight.shadow.camera.bottom = -10;
+// const dLightHelper = new THREE.DirectionalLightHelper(directionalLight, 5);
+// scene.add(dLightHelper);
+// const dLightShadowHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
+// scene.add(dLightShadowHelper);
+const spotLight = new _three.SpotLight(0xFFFFFF);
+scene.add(spotLight);
+spotLight.position.set(-100, 100, 0);
+const sLightHelper = new _three.SpotLightHelper(spotLight);
+scene.add(sLightHelper);
 const gui = new _datGui.GUI();
 const options = {
     sphereColor: "#ffea00",
