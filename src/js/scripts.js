@@ -27,7 +27,7 @@ scene.add(axesHelper);
 // camera.position.z = 5;
 // camera.position.y = 2;
 
-camera.position.set(0, 2, 5);
+camera.position.set(-10, 30, 30);
 
 orbit.update();
 
@@ -36,6 +36,13 @@ const boxMaterial = new THREE.MeshBasicMaterial({color: 0x00ff00});
 const box = new THREE.Mesh(boxGeometry, boxMaterial);
 scene.add(box);
 
+const planeGeometry = new THREE.PlaneGeometry(30, 30);
+const planeMaterial = new THREE.MeshBasicMaterial({color: 0xFFFFFF});
+const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+scene.add(plane);
+
+const gridHelper = new THREE.GridHelper();
+scene.add(gridHelper);
 
 
 function animate(time) {

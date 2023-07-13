@@ -587,7 +587,7 @@ const axesHelper = new _three.AxesHelper(5);
 scene.add(axesHelper);
 // camera.position.z = 5;
 // camera.position.y = 2;
-camera.position.set(0, 2, 5);
+camera.position.set(-10, 30, 30);
 orbit.update();
 const boxGeometry = new _three.BoxGeometry();
 const boxMaterial = new _three.MeshBasicMaterial({
@@ -595,6 +595,14 @@ const boxMaterial = new _three.MeshBasicMaterial({
 });
 const box = new _three.Mesh(boxGeometry, boxMaterial);
 scene.add(box);
+const planeGeometry = new _three.PlaneGeometry(30, 30);
+const planeMaterial = new _three.MeshBasicMaterial({
+    color: 0xFFFFFF
+});
+const plane = new _three.Mesh(planeGeometry, planeMaterial);
+scene.add(plane);
+const gridHelper = new _three.GridHelper();
+scene.add(gridHelper);
 function animate(time) {
     box.rotation.x = time / 1000;
     box.rotation.y = time / 1000;
