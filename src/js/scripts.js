@@ -1,6 +1,6 @@
 import { render } from 'react-dom';
 import * as THREE from 'three';
-import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import * as dat from 'dat.gui'
 
 const renderer = new THREE.WebGLRenderer();
@@ -17,11 +17,11 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
     75,
     window.innerWidth / window.innerHeight,
-    0.1, 
+    0.1,
     1000
 );
 
-const orbit = new OrbitControls(camera, renderer.domElement );
+const orbit = new OrbitControls(camera, renderer.domElement);
 
 const axesHelper = new THREE.AxesHelper(5);
 scene.add(axesHelper);
@@ -56,12 +56,14 @@ scene.add(gridHelper);
 const sphereGeometry = new THREE.SphereGeometry(4, 50, 10);
 const sphereMaterial = new THREE.MeshStandardMaterial({
     color: 0x0000FF,
-    wireframe: false});
+    wireframe: false
+});
 const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
 scene.add(sphere);
 sphere.position.set(0, 10, 0)
-sphere.castShadow = true;
 
+// add sphere and castShadows 
+sphere.castShadow = true;
 const ambientLight = new THREE.AmbientLight(0x333333);
 scene.add(ambientLight);
 
@@ -80,6 +82,8 @@ scene.add(ambientLight);
 const spotLight = new THREE.SpotLight(0xFFFFFF);
 scene.add(spotLight);
 spotLight.position.set(-100, 100, 0);
+spotLight.castShadow = true;
+spotLight.angle = 0.2;
 
 const sLightHelper = new THREE.SpotLightHelper(spotLight);
 scene.add(sLightHelper);
@@ -89,18 +93,26 @@ const gui = new dat.GUI();
 const options = {
     sphereColor: '#ffea00',
     wireframe: false,
-    speed: 0.01
+    speed: 0.01,
+    angle: 0.2,
+    penumbra: 0,
+    intensity: 1
 };
 
-gui.addColor(options, 'sphereColor').onChange(function(e){
+gui.addColor(options, 'sphereColor').onChange(function (e) {
     sphere.material.color.set(e);
 });
 
-gui.add(options, 'wireframe').onChange(function(e){
+gui.add(options, 'wireframe').onChange(function (e) {
     sphere.material.wireframe = e;
 });
 
 gui.add(options, 'speed', 0, 0.1);
+
+gui.add(options, 'angle', 0, 1);
+gui.add(options, 'penumbra', 0, 1);
+// gui.add(options, 'intencity', 0, 1);
+
 
 let step = 0;
 
@@ -110,6 +122,11 @@ function animate(time) {
 
     step += options.speed;
     sphere.position.y = 10 * Math.abs(Math.sin(step));
+
+    spotLight.angle = options.angle;
+    spotLight.penumbra = options.penumbra;
+    spotLight.intensity = options.intensity;
+    sLightHelper.update();
 
     renderer.render(scene, camera);
 }

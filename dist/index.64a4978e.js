@@ -614,6 +614,7 @@ const sphereMaterial = new _three.MeshStandardMaterial({
 const sphere = new _three.Mesh(sphereGeometry, sphereMaterial);
 scene.add(sphere);
 sphere.position.set(0, 10, 0);
+// add sphere and castShadows 
 sphere.castShadow = true;
 const ambientLight = new _three.AmbientLight(0x333333);
 scene.add(ambientLight);
@@ -629,13 +630,18 @@ scene.add(ambientLight);
 const spotLight = new _three.SpotLight(0xFFFFFF);
 scene.add(spotLight);
 spotLight.position.set(-100, 100, 0);
+spotLight.castShadow = true;
+spotLight.angle = 0.2;
 const sLightHelper = new _three.SpotLightHelper(spotLight);
 scene.add(sLightHelper);
 const gui = new _datGui.GUI();
 const options = {
     sphereColor: "#ffea00",
     wireframe: false,
-    speed: 0.01
+    speed: 0.01,
+    angle: 0.2,
+    penumbra: 0,
+    intensity: 1
 };
 gui.addColor(options, "sphereColor").onChange(function(e) {
     sphere.material.color.set(e);
@@ -644,12 +650,19 @@ gui.add(options, "wireframe").onChange(function(e) {
     sphere.material.wireframe = e;
 });
 gui.add(options, "speed", 0, 0.1);
+gui.add(options, "angle", 0, 1);
+gui.add(options, "penumbra", 0, 1);
+// gui.add(options, 'intencity', 0, 1);
 let step = 0;
 function animate(time) {
     // box.rotation.x = time / 1000;
     // box.rotation.y = time / 1000;
     step += options.speed;
     sphere.position.y = 10 * Math.abs(Math.sin(step));
+    spotLight.angle = options.angle;
+    spotLight.penumbra = options.penumbra;
+    spotLight.intensity = options.intensity;
+    sLightHelper.update();
     renderer.render(scene, camera);
 }
 renderer.setAnimationLoop(animate);
